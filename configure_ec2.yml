@@ -1,0 +1,36 @@
+---
+- hosts: ec2
+  become: yes
+  tasks:
+    - name: Install dependencies
+      apt:
+        name: ['python3-pip', 'python3-dev', 'build-essential']
+        state: present
+      become_user: root
+
+    - name: Install Docker
+      apt:
+        name: docker.io
+        state: present
+      become_user: root
+
+    - name: Install Docker Python package
+      pip:
+        name: docker
+      become_user: root
+
+    - name: Set environment variables
+      lineinfile:
+        path: ~/.bashrc
+        line: |
+          export FLASK_APP=app.py
+          export FLASK_ENV=production
+      become_user: <EC2_INSTANCE_USERNAME>
+      become: yes
+
+    - name: Configure firewall (optional)
+      ufw:
+        rule: allow
+        port: 80
+        proto: tcp
+      become_user: root

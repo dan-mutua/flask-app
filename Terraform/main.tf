@@ -6,10 +6,10 @@ provider "aws" {
 
 
 resource "aws_instance" "flask-app" {
-  ami              = "ami-053b0d53c279acc90"
+  ami              = "ami-053b0d53c279acc90" # Replace with the desired AMI ID
   instance_type    = "t2.medium"
-  security_groups = ["launch-wizard-4"]
-  key_name         = "mrl"
+  security_groups = ["launch-wizard-4"]  # Replace with the name of your security group 
+  key_name         = "mrl" # Replace with the name of your EC2 key pa
   
   root_block_device {
     volume_size = 40
