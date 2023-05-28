@@ -5,6 +5,7 @@ app = Flask(__name__)
 
 @app.route('/')
 def get_value():
+    time.sleep(35)
     return 'Hello, Welcome to my app'
 
 
