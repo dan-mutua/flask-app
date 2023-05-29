@@ -23,15 +23,13 @@ pipeline {
             }
         }
         stage('Deploy to Kubernetes') {
+              stage('Deploy') {
             steps {
-                withCredentials([file(credentialsId: 'kubeconfig', variable: 'KUBECONFIG')]) {
-                    sh '''
-                        export KUBECONFIG=$KUBECONFIG
-                        kubectl config use-context your-context
-                        kubectl set image deployment/$KUBE_DEPLOYMENT_NAME $KUBE_DEPLOYMENT_NAME=themutua/flask-app:$BUILD_NUMBER --namespace=$KUBE_NAMESPACE
-                    '''
-                }
+                sh 'kubectl apply -f deployment.yaml'
+                sh 'kubectl apply -f service.yaml'
+                sh 'ansible-playbook configure_ec2.yml'
             }
+        }
         }
     }
     post {
