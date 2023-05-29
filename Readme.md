@@ -41,16 +41,34 @@ To set up the application, follow these steps:
 
 ### Jenkins Configuration
 1. Create a new Jenkins job.
-
-2. Configure the job to monitor the branch where your application code resides.
-
-3. Set up the job to perform the following steps:
-
- - Clone the repository.
- - Build a Docker image from the code and tag it with a version.
- - Push the Docker image to a Docker registry.
- - Deploy the updated code to the Kubernetes cluster using the app-deployment.yaml file.
+ - In the Jenkins web interface, click on "New Item" to create a new job.
+ - Enter a name for the job and select "Pipeline" as the job type.
+ - Under the "Pipeline" section, choose "Pipeline script from SCM" for the Definition.
+ - Set the SCM to Git and provide the repository URL of this repository.
  - Save the job configuration.
+2. Configure Docker Hub credentials:
+ - In Jenkins, go to "Manage Jenkins" > "Manage Credentials".
+ - Click on "Global credentials (unrestricted)" > "Add Credentials".
+ - Choose "Username with password" as the kind.
+ - Enter your Docker Hub username and password, and provide an ID for the credentials.
+- Save the credentials.
+3. Update Jenkinsfile:
+ - Open the Jenkinsfile in this repository and make the following modifications:
+ - Replace <EC2_INSTANCE_USERNAME> with the actual username of your EC2 instance in the configure_ec2.yml playbook.
+ - Update the credentialsId in the Push stage with the ID of your Docker Hub credentials stored in Jenkins.
+ - Save the changes to the Jenkinsfile.
+4. Deploy the Jenkins job:
+-  Run the Jenkins job manually or trigger it based on your preferred conditions.
+ - The pipeline will execute the stages defined in the Jenkinsfile:
+ - Build: Builds the Docker image.
+ - Test: Runs tests inside the Docker container.
+ - Push: Pushes the Docker image to a Docker registry (Docker Hub).
+ - Deploy: Applies the Kubernetes deployment and service configurations using kubectl, and runs the configure_ec2.yml Ansible playbook.
+ - Save the job configuration.
+5. Verify the deployment:
+- Once the pipeline completes successfully, verify that the Flask application is deployed and running in your Kubernetes cluster.
+
+
 
 ### Trigger the Deployment
 1. Make changes to your application code and push the changes to the monitored branch in your Git repository.
